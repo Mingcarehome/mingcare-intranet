@@ -26,7 +26,7 @@ export type PreferredArea =
   | '所有區域' | '灣仔區' | '中西區' | '東區' | '南區' | '油尖旺區'
   | '深水埗區' | '九龍城區' | '黃大仙區' | '觀塘區' | '西貢區' | '沙田區'
   | '大埔區' | '北區' | '荃灣區' | '屯門區' | '元朗區' | '葵青區' | '離島區';
-export type ProjectCategory = 'MC社區券(醫點）' | 'MC街客' | 'Steven140' | 'Steven200' | 'Steven醫點' | '俊佳';
+export type ProjectCategory = 'MC社區券(醫點）' | 'MC街客' | 'Steven140' | 'Steven200' | 'Steven醫點' | '俊佳' | '安心同行';
 export type ProjectManager = 'Candy Ho' | 'Joe Cheung' | 'Kanas Leung' | 'Tracy Yau';
 export type ServiceType =
   | 'ES-護送服務(陪診)' | 'FD-送飯服務' | 'HC-家居服務' | 'NA-護理服務（輔助人員）'
