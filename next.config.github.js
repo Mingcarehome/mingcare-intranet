@@ -2,6 +2,7 @@
 const nextConfig = {
   // GitHub Pages static export configuration
   output: 'export',
+  distDir: 'out',
   trailingSlash: true,
   images: {
     unoptimized: true
