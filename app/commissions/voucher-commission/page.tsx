@@ -180,6 +180,9 @@ export default function VoucherCommissionPage() {
     setLoading(true)
     try {
       // 獲取指定日期範圍的服務記錄
+      // include full last day by adding end-of-day time
+      const endDateTime = `${endDate}T23:59:59`
+
       const { data: billing, error: billingError } = await supabase
         .from('billing_salary_data')
         .select(`
@@ -193,7 +196,7 @@ export default function VoucherCommissionPage() {
           service_type
         `)
         .gte('service_date', startDate)
-        .lte('service_date', endDate)
+        .lte('service_date', endDateTime)
 
       if (billingError) throw billingError
 
