@@ -180,11 +180,14 @@ export default function VoucherCommissionPage() {
     setLoading(true)
     try {
       // 獲取指定日期範圍的服務記錄
+      // 1. Create the YYYY-MM prefix string
+      const yearMonth = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}`
+      
+      // 2. Fetch data using a wildcard search on the service_date
       const { data: billing, error: billingError } = await supabase
         .from('billing_salary_data')
         .select('id, customer_id, customer_name, service_date, service_hours, service_fee, project_category, service_type')
-        .gte('service_date', startDate)
-        .lte('service_date', endDate)
+        .like('service_date', `${yearMonth}%`) // Matches any date starting with '2026-05'
 
       if (billingError) throw billingError
 
