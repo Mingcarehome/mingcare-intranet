@@ -182,16 +182,18 @@ export default function VoucherCommissionPage() {
       // 獲取指定日期範圍的服務記錄
       const { data: billing, error: billingError } = await supabase
         .from('billing_salary_data')
-        .select(' id, customer_id, customer_name, service_date, service_hours, service_fee, project_category, service_type')
+        .select(`
+          id,
+          customer_id,
+          customer_name,
+          service_date,
+          service_hours,
+          service_fee,
+          project_category,
+          service_type
+        `)
         .gte('service_date', startDate)
         .lte('service_date', endDate)
-      
-      if (billingError) throw billingError
-
-      // 獲取客戶的介紹人信息
-      const { data: customers, error: custError } = await supabase
-        .from('customer_personal_data')
-        .select('customer_id, introducer, voucher_number, hkid')
 
       if (billingError) throw billingError
 
@@ -443,7 +445,7 @@ export default function VoucherCommissionPage() {
         <body>
           <h1>明家居家護理服務 - 社區券介紹人佣金報表</h1>
           <div class="info">
-            ${selectedYear}年${}月 (${startDate} 至 ${endDate})
+            ${selectedYear}年${selectedMonth}月 (${startDate} 至 ${endDate})
             ${selectedIntroducer !== 'all' ? ` | 介紹人：${selectedIntroducer}` : ''}
           </div>
           
