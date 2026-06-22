@@ -179,24 +179,36 @@ export default function VoucherCommissionPage() {
 
     setLoading(true)
     try {
-      // 獲取指定日期範圍的服務記錄
-      // include full last day by adding end-of-day time
-      const endDateTime = `${endDate}T23:59:59`
-
-      const { data: billing, error: billingError } = await supabase
-        .from('billing_salary_data')
-        .select(`
-          id,
-          customer_id,
-          customer_name,
-          service_date,
-          service_hours,
-          service_fee,
-          project_category,
-          service_type
-        `)
-        .gte('service_date', startDate)
-        .lte('service_date', endDateTime)
+    // Use an exclusive end bound to avoid timezone / inclusive-end issues.
+    // Query: service_date >= startDateT00:00:00 AND service_date < (dayAfter(endDate)T00:00:00)
+    const addDaysToDateString = (dateStr: string, days = 1) => {
+      const [y, m, d] = dateStr.split('-').map(Number)
+      const dt = new Date(y, m - 1, d + days)
+      const yyyy = dt.getFullYear()
+      const mm = String(dt.getMonth() + 1).padStart(2, '0')
+      const dd = String(dt.getDate()).padStart(2, '0')
+      return `${yyyy}-${mm}-${dd}`
+    }
+    const endExclusiveDate = addDaysToDateString(endDate, 1)
+    
+    // Use start at midnight and exclusive end at next-midnight
+    const startDateTime = `${startDate}T00:00:00`
+    const endExclusiveDateTime = `${endExclusiveDate}T00:00:00`
+    
+    const { data: billing, error: billingError } = await supabase
+      .from('billing_salary_data')
+      .select(`
+        id,
+        customer_id,
+        customer_name,
+        service_date,
+        service_hours,
+        service_fee,
+        project_category,
+        service_type
+      `)
+      .gte('service_date', startDateTime)
+      .lt('service_date', endExclusiveDateTime)
 
       if (billingError) throw billingError
 
