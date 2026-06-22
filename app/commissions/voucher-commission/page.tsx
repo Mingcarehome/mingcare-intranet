@@ -185,7 +185,7 @@ export default function VoucherCommissionPage() {
         .select(' id, customer_id, customer_name, service_date, service_hours, service_fee, project_category, service_type')
         .gte('service_date', startDate)
         .lte('service_date', endDate)
-
+      
       if (billingError) throw billingError
 
       // 獲取客戶的介紹人信息
