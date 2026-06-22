@@ -179,21 +179,10 @@ export default function VoucherCommissionPage() {
 
     setLoading(true)
     try {
-    // Use an exclusive end bound to avoid timezone / inclusive-end issues.
-    // Query: service_date >= startDateT00:00:00 AND service_date < (dayAfter(endDate)T00:00:00)
-    const addDaysToDateString = (dateStr: string, days = 1) => {
-      const [y, m, d] = dateStr.split('-').map(Number)
-      const dt = new Date(y, m - 1, d + days)
-      const yyyy = dt.getFullYear()
-      const mm = String(dt.getMonth() + 1).padStart(2, '0')
-      const dd = String(dt.getDate()).padStart(2, '0')
-      return `${yyyy}-${mm}-${dd}`
-    }
-    const endExclusiveDate = addDaysToDateString(endDate, 1)
-    
-    // Use start at midnight and exclusive end at next-midnight
-    const startDateTime = `${startDate}T00:00:00`
-    const endExclusiveDateTime = `${endExclusiveDate}T00:00:00`
+    // 1. Remove the addDaysToDateString function and the endExclusiveDate logic
+    // 2. Use inclusive bounds with 23:59:59 to cover the entire last day safely
+    const startDateTime = `${startDate} 00:00:00`
+    const endDateTime = `${endDate} 23:59:59`
     
     const { data: billing, error: billingError } = await supabase
       .from('billing_salary_data')
@@ -208,7 +197,7 @@ export default function VoucherCommissionPage() {
         service_type
       `)
       .gte('service_date', startDateTime)
-      .lt('service_date', endExclusiveDateTime)
+      .lte('service_date', endDateTime) // Use .lte instead of .lt
 
       if (billingError) throw billingError
 
