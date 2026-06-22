@@ -180,18 +180,27 @@ export default function VoucherCommissionPage() {
     setLoading(true)
     try {
       // 獲取指定日期範圍的服務記錄
-    if (!startDate || !endDate) {
-      alert('請選擇日期範圍')
-      return
-    }
-      // 1. Create the YYYY-MM prefix string
-      const yearMonth = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}`
-      
-      // 2. Fetch data using a wildcard search on the service_date
       const { data: billing, error: billingError } = await supabase
         .from('billing_salary_data')
-        .select('id, customer_id, customer_name, service_date, service_hours, service_fee, project_category, service_type')
-        .like('service_date', `${yearMonth}%`) // Matches any date starting with '2026-05'
+        .select(`
+          id,
+          customer_id,
+          customer_name,
+          service_date,
+          service_hours,
+          service_fee,
+          project_category,
+          service_type
+        `)
+        .gte('service_date', startDate)
+        .lte('service_date', endDate)
+
+      if (billingError) throw billingError
+
+      // 獲取客戶的介紹人信息
+      const { data: customers, error: custError } = await supabase
+        .from('customer_personal_data')
+        .select('customer_id, introducer, voucher_number, hkid')
 
       if (billingError) throw billingError
 
