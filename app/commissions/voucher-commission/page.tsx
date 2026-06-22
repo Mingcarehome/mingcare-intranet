@@ -93,7 +93,7 @@ export default function VoucherCommissionPage() {
     const lastDay = getLastDayOfMonth(selectedYear, selectedMonth)
     
     setStartDate(formatDateString(selectedYear, selectedMonth, 1))
-    setEndDate(formatDateString(selectedYear, selectedMonth, 31))
+    setEndDate(formatDateString(selectedYear, selectedMonth, lastDay))
   }, [selectedYear, selectedMonth])
 
   // 生成年份選項（過去5年到未來1年）
