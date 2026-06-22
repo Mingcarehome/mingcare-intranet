@@ -182,16 +182,7 @@ export default function VoucherCommissionPage() {
       // 獲取指定日期範圍的服務記錄
       const { data: billing, error: billingError } = await supabase
         .from('billing_salary_data')
-        .select('
-          id,
-          customer_id,
-          customer_name,
-          service_date,
-          service_hours,
-          service_fee,
-          project_category,
-          service_type
-        ')
+        .select('id, customer_id, customer_name, service_date, service_hours, service_fee, project_category, service_type')
         .gte('service_date', startDate)
         .lte('service_date', endDate)
 
