@@ -179,25 +179,21 @@ export default function VoucherCommissionPage() {
 
     setLoading(true)
     try {
-    // 1. Remove the addDaysToDateString function and the endExclusiveDate logic
-    // 2. Use inclusive bounds with 23:59:59 to cover the entire last day safely
-    const startDateTime = `${startDate} 00:00:00`
-    const endDateTime = `${endDate} 23:59:59`
-    
-    const { data: billing, error: billingError } = await supabase
-      .from('billing_salary_data')
-      .select(`
-        id,
-        customer_id,
-        customer_name,
-        service_date,
-        service_hours,
-        service_fee,
-        project_category,
-        service_type
-      `)
-      .gte('service_date', startDateTime)
-      .lte('service_date', endDateTime) // Use .lte instead of .lt
+      // 獲取指定日期範圍的服務記錄
+      const { data: billing, error: billingError } = await supabase
+        .from('billing_salary_data')
+        .select(`
+          id,
+          customer_id,
+          customer_name,
+          service_date,
+          service_hours,
+          service_fee,
+          project_category,
+          service_type
+        `)
+        .gte('service_date', startDate)
+        .lte('service_date', endDate)
 
       if (billingError) throw billingError
 
