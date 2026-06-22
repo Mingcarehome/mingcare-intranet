@@ -179,6 +179,8 @@ export default function VoucherCommissionPage() {
 
     setLoading(true)
     try {
+      
+      const yearMonth = '${selectedYear}-${String(selectedMonth).padStart(2, '0')}'
       // 獲取指定日期範圍的服務記錄
       const { data: billing, error: billingError } = await supabase
         .from('billing_salary_data')
@@ -192,8 +194,7 @@ export default function VoucherCommissionPage() {
           project_category,
           service_type
         `)
-        .gte('service_date', startDate)
-        .lte('service_date', endDate)
+        .like('service_date', '${yearMonth}%')
 
       if (billingError) throw billingError
 
