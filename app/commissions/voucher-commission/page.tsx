@@ -180,6 +180,10 @@ export default function VoucherCommissionPage() {
     setLoading(true)
     try {
       // 獲取指定日期範圍的服務記錄
+    if (!startDate || !endDate) {
+      alert('請選擇日期範圍')
+      return
+    }
       // 1. Create the YYYY-MM prefix string
       const yearMonth = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}`
       
@@ -439,7 +443,7 @@ export default function VoucherCommissionPage() {
         <body>
           <h1>明家居家護理服務 - 社區券介紹人佣金報表</h1>
           <div class="info">
-            ${selectedYear}年${selectedMonth}月 (${startDate} 至 ${endDate})
+            ${selectedYear}年${}月 (${startDate} 至 ${endDate})
             ${selectedIntroducer !== 'all' ? ` | 介紹人：${selectedIntroducer}` : ''}
           </div>
           
