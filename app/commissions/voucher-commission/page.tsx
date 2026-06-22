@@ -196,6 +196,11 @@ export default function VoucherCommissionPage() {
         .gte('service_date', startDate)
         .lte('service_date', endDate)
 
+
+      console.log('DEBUG: Total records fetched from DB:', billing?.length);
+
+
+      
       if (billingError) throw billingError
 
       // 獲取客戶的介紹人信息
@@ -333,6 +338,10 @@ export default function VoucherCommissionPage() {
       
       setDetailData(detailRecords)
       setServiceRecords(filteredRecords)
+
+
+      console.log('DEBUG: Total records actually displayed:', calculatedDetails.length);
+
       
       // 同時計算匯總數據（用於總覽）
       const groupedData = new Map<string, VoucherCommissionSummary>()
