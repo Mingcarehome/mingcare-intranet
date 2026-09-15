@@ -73,6 +73,7 @@ export type ProjectCategory =
   | 'Steven醫點'
   | '俊佳'
   | '安心同行'
+  | '卓力醫療'
 
 export type ProjectManager = 
   | 'Candy Ho'
@@ -271,7 +272,9 @@ export const PROJECT_CATEGORY_OPTIONS: { value: ProjectCategory; label: string }
   { value: 'Steven200', label: 'Steven200' },
   { value: 'Steven醫點', label: 'Steven醫點' },
   { value: '俊佳', label: '俊佳' },
-  { value: '安心同行', label: '安心同行' }
+  { value: '安心同行', label: '安心同行' },
+  { value: '卓力醫療', label: '卓力醫療' }
+  
 ]
 
 export const PROJECT_MANAGER_OPTIONS: { value: ProjectManager; label: string }[] = [
