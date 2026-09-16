@@ -340,7 +340,6 @@ export default function VoucherCommissionPage() {
       setServiceRecords(filteredRecords)
 
 
-      console.log('DEBUG: Total records actually displayed:', calculatedDetails.length);
 
       
       // 同時計算匯總數據（用於總覽）
