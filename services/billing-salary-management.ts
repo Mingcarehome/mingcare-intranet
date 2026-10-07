@@ -305,7 +305,6 @@ const { data, error } = await query
   .order('start_time', { ascending: true })
   .order('id', { ascending: true }) // <--- Guarantees stable pagination order across page boundaries
   .range(from, to)
-
       
       if (error) {
         console.error('Error fetching records:', error)
