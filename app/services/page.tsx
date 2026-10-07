@@ -240,33 +240,45 @@ function ReportsCalendarView({
           const records = response.data.data || []
           setAllRecords(records) // 存儲所有記錄
 
-          // 將記錄按日期分組（支援跨夜更）
-          const groupedByDate: Record<string, BillingSalaryRecordWithOvernight[]> = {}
-          records.forEach((record: BillingSalaryRecord) => {
-            const startDate = record.service_date
-            
-            // 添加到開始日期
-            if (!groupedByDate[startDate]) {
-              groupedByDate[startDate] = []
-            }
-            groupedByDate[startDate].push(record)
-            
-            // 檢測跨夜更：結束時間小於開始時間
-            if (record.start_time && record.end_time && record.start_time > record.end_time) {
-              // 計算結束日期（隔天）
-              const startDateObj = new Date(startDate + 'T00:00:00')
-              startDateObj.setDate(startDateObj.getDate() + 1)
-              const endDate = formatDateSafely(startDateObj)
-              
-              // 也添加到結束日期（隔天），標記為跨夜顯示
-              if (!groupedByDate[endDate]) {
-                groupedByDate[endDate] = []
-              }
-              // 添加標記以便在顯示時區分
-              const overnightRecord = { ...record, _isOvernightEndDay: true }
-              groupedByDate[endDate].push(overnightRecord)
-            }
-          })
+// 將記錄按日期分組（支援跨夜更）
+const groupedByDate: Record<string, BillingSalaryRecordWithOvernight[]> = {}
+
+records.forEach((record: BillingSalaryRecord) => {
+  const startDate = record.service_date
+
+  // 先放回原始日期
+  if (!groupedByDate[startDate]) {
+    groupedByDate[startDate] = []
+  }
+  groupedByDate[startDate].push(record)
+
+  // 只在真正跨夜時，才生成「隔天」顯示複本
+  if (record.start_time && record.end_time && record.start_time > record.end_time) {
+    const startDateObj = parseDateStringLocal(startDate)
+    startDateObj.setDate(startDateObj.getDate() + 1)
+    const endDate = formatDateLocal(startDateObj)
+
+    // 避免時區問題造成 endDate === startDate
+    if (endDate !== startDate) {
+      if (!groupedByDate[endDate]) {
+        groupedByDate[endDate] = []
+      }
+
+      const overnightRecord = { ...record, _isOvernightEndDay: true }
+      groupedByDate[endDate].push(overnightRecord)
+    }
+  }
+})
+
+// 兜底：避免同一個 record 因為前端邏輯重複插入而重複渲染
+Object.keys(groupedByDate).forEach((dateKey) => {
+  const seen = new Set<string>()
+  groupedByDate[dateKey] = groupedByDate[dateKey].filter((item) => {
+    if (seen.has(item.id)) return false
+    seen.add(item.id)
+    return true
+  })
+})
 
           setCalendarData(groupedByDate)
         }
