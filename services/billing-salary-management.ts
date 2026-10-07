@@ -299,11 +299,14 @@ export async function fetchAllBillingSalaryRecords(
         query = query.or(`customer_name.ilike.%${filters.searchTerm}%,phone.ilike.%${filters.searchTerm}%,customer_id.ilike.%${filters.searchTerm}%`)
       }
 
-      const { data, error } = await query
-        .order('service_date', { ascending: false })
-        .order('start_time', { ascending: true })
-        .range(from, to)
+// AFTER (FIX):
+const { data, error } = await query
+  .order('service_date', { ascending: false })
+  .order('start_time', { ascending: true })
+  .order('id', { ascending: true }) // <--- Guarantees stable pagination order across page boundaries
+  .range(from, to)
 
+      
       if (error) {
         console.error('Error fetching records:', error)
         throw error
