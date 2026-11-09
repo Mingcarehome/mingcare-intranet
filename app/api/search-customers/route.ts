@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       .limit(10)
 
     if (error) {
-      console.error('搜尋客戶時發生錯誤:', error)
+      console.error('搜尋客戶時發生錯誤')
       return NextResponse.json(
         { success: false, error: '搜尋失敗: ' + error.message },
         { status: 500 }
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     })
 
   } catch (error) {
-    console.error('API 錯誤:', error)
+    console.error('客戶搜尋 API 錯誤')
     return NextResponse.json(
       { success: false, error: '伺服器內部錯誤' },
       { status: 500 }

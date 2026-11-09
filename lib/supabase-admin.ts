@@ -1,29 +1,6 @@
-import { createClient } from '@supabase/supabase-js'
+import { getSupabase, supabase } from './supabase'
 
-// 管理員客戶端 - 使用 service role key 繞過 RLS
-// 僅用於後台管理功能，可以訪問所有數據
-let _supabaseAdmin: any = null
-
-export const getSupabaseAdmin = () => {
-  // During build/SSR, return null
-  if (typeof window === 'undefined') {
-    return null
-  }
-  
-  if (!_supabaseAdmin) {
-    _supabaseAdmin = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
-      {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false
-        }
-      }
-    )
-  }
-  return _supabaseAdmin
-}
-
-// For backward compatibility
-export const supabaseAdmin = typeof window === 'undefined' ? null : (getSupabaseAdmin() as any)
+// Legacy imports share the signed-in browser client and its RLS permissions.
+// getSupabase() and supabase remain null during build/SSR.
+export const getSupabaseAdmin = getSupabase
+export const supabaseAdmin = supabase

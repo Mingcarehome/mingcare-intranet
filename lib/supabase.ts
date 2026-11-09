@@ -7,6 +7,13 @@ export const createClient = () => {
   if (typeof window === 'undefined') {
     return null
   }
+
+  // Migrate legacy plaintext passwords even when a saved session opens a dashboard.
+  try {
+    window.localStorage.removeItem('mingcare_password')
+  } catch {
+    // Browser storage can be disabled; allow Supabase's existing storage fallback.
+  }
   
   return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

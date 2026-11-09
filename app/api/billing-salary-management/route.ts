@@ -6,9 +6,6 @@ export async function POST(request: NextRequest) {
     const supabase = createSupabaseServerClient()
     const body = await request.json()
     
-    // Debug logging
-    console.log('API received data:', JSON.stringify(body, null, 2))
-    
     const {
       customer_id,
       care_staff_name,
@@ -59,8 +56,6 @@ export async function POST(request: NextRequest) {
       hourly_rate: hourly_rate
     }
 
-    console.log('Final data after mapping:', JSON.stringify(finalData, null, 2))
-
     // Validate required fields
     if (!finalData.service_date || !finalData.care_staff_name || !finalData.customer_name || !finalData.staff_id) {
       const missingFields = []
@@ -69,19 +64,6 @@ export async function POST(request: NextRequest) {
       if (!finalData.customer_name) missingFields.push('客戶姓名')
       if (!finalData.staff_id) missingFields.push('護理人員編號')
       
-      console.log('Missing required fields:', { 
-        service_date: finalData.service_date, 
-        care_staff_name: finalData.care_staff_name, 
-        customer_name: finalData.customer_name,
-        staff_id: finalData.staff_id
-      })
-      console.log('Source fields:', { 
-        service_date, 
-        care_staff_name, 
-        customer_name,
-        staff_id,
-        staffId
-      })
       return NextResponse.json(
         { success: false, error: `缺少必要欄位: ${missingFields.join(', ')}` },
         { status: 400 }
@@ -95,13 +77,7 @@ export async function POST(request: NextRequest) {
       .select()
 
     if (error) {
-      console.error('Supabase error details:', {
-        message: error.message,
-        details: error.details,
-        hint: error.hint,
-        code: error.code,
-        fullError: error
-      })
+      console.error('Billing salary database write failed')
       return NextResponse.json(
         { success: false, error: `資料庫錯誤: ${error.message}` },
         { status: 500 }
@@ -114,7 +90,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('API error:', error)
+    console.error('Billing salary API error')
     return NextResponse.json(
       { success: false, error: '伺服器錯誤' },
       { status: 500 }

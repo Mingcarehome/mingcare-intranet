@@ -14,18 +14,15 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
-  // 載入儲存的登入信息
+  // 載入儲存的電子郵件，並移除舊版儲存的密碼
   useEffect(() => {
+    localStorage.removeItem('mingcare_password')
     const savedEmail = localStorage.getItem('mingcare_email')
-    const savedPassword = localStorage.getItem('mingcare_password')
     const savedRememberMe = localStorage.getItem('mingcare_remember') === 'true'
     
     if (savedEmail && savedRememberMe) {
       setEmail(savedEmail)
       setRememberMe(savedRememberMe)
-    }
-    if (savedPassword && savedRememberMe) {
-      setPassword(savedPassword)
     }
   }, [])
 
@@ -43,10 +40,9 @@ export default function LoginPage() {
       if (error) throw error
 
       if (data.user) {
-        // 儲存登入信息（如果用戶選擇記住）
+        // 只儲存電子郵件偏好（如果用戶選擇記住）
         if (rememberMe) {
           localStorage.setItem('mingcare_email', email)
-          localStorage.setItem('mingcare_password', password)
           localStorage.setItem('mingcare_remember', 'true')
         } else {
           // 清除儲存的登入信息
